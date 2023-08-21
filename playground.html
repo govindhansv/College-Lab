@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>HTML Playground</title>
+</head>
+<body class="bg-gray-100 h-screen">
+
+    <div class="flex h-full">
+        <div class="w-1/2 bg-white p-4 shadow-md">
+            <h2 class="text-lg font-semibold mb-2">HTML Editor</h2>
+            <textarea id="htmlCode" class="w-full h-64 p-2 border rounded" placeholder="Enter your HTML code..."></textarea>
+
+<div class="w-1/2 bg-white p-4 shadow-md">
+    <!-- ... Existing code ... -->
+    <button id="saveAsBtn" class="mt-2 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">Save As</button>
+    <a id="downloadLink" class="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 hidden" download>Download</a>
+</div>
+        </div>
+        <div class="w-1/2 bg-gray-200 p-4">
+            <h2 class="text-lg font-semibold mb-2">Preview</h2>
+            <iframe id="preview" class="w-full h-64 border rounded"></iframe>
+        </div>
+    </div>
+<!-- ... Previous HTML code ... -->
+
+
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+<script>
+   document.addEventListener("DOMContentLoaded", () => {
+    const htmlCode = document.getElementById("htmlCode");
+    const saveAsBtn = document.getElementById("saveAsBtn");
+    const downloadLink = document.getElementById("downloadLink");
+    const preview = document.getElementById("preview");
+
+    htmlCode.addEventListener("input", updatePreview);
+    saveAsBtn.addEventListener("click", saveAsFile);
+
+    function updatePreview() {
+        const code = htmlCode.value;
+        const iframeDocument = preview.contentDocument || preview.contentWindow.document;
+
+        iframeDocument.body.innerHTML = code;
+    }
+
+    function saveAsFile() {
+        const code = htmlCode.value;
+        const blob = new Blob([code], { type: "text/html" });
+        const url = URL.createObjectURL(blob);
+        
+        downloadLink.href = url;
+        // downloadLink.classList.remove("hidden");
+        downloadLink.setAttribute("download", "index.html");
+        downloadLink.click();
+    }
+    
+});
+
+
+</script>
+
+<script>
+    require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.24.0/min/vs' }});
+    require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('editor-container'), {
+            value: 'function hello() {\n\tconsole.log("Hello, world!");\n}',
+            language: 'javascript',
+            theme: 'vs-dark',
+            automaticLayout: true
+        });
+    });
+</script>
